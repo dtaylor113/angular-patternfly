@@ -13,6 +13,8 @@
  * </ul>
  * @param {boolean=} show-top-border Show/hide the top border, true shows top border, false (default) hides top border
  * @param {boolean} htmlContent Flag to allow HTML content within the info options
+ * @param {boolean=} showSpinner Show/Hide the spinner for loading state. True shows the spinner, false (default) hides the spinner
+ * @param {string=} spinnerText Text for the card spinner
  *
  * @description
  * Component for easily displaying textual information
@@ -31,13 +33,19 @@
        <br/>
        <label>With HTML</label>
        <pf-info-status-card status="infoStatusAlt" html-content="true"></pf-info-status-card>
+       <br/>
+       <label>Loading State</label>
+       <pf-info-status-card status="infoStatus2" show-top-border="true" show-spinner="dataLoading" spinner-text="Loading"></pf-info-status-card>
      </div>
    </div>
  </file>
 
  <file name="script.js">
-   angular.module( 'patternfly.card' ).controller( 'CardDemoCtrl', function( $scope, $window ) {
+   angular.module( 'patternfly.card' ).controller( 'CardDemoCtrl', function( $scope, $window, $timeout ) {
     var imagePath = $window.IMAGE_PATH || "img";
+
+    $scope.dataLoading = true;
+
     $scope.infoStatus = {
       "title":"TinyCore-local",
       "href":"#",
@@ -49,6 +57,22 @@
         "Power status: on"
       ]
     };
+
+    $timeout(function () {
+      $scope.dataLoading = false;
+
+      $scope.infoStatus2 = {
+        "title":"TinyCore-local",
+        "href":"#",
+        "iconClass": "fa fa-shield",
+        "info":[
+          "VM Name: aapdemo002",
+          "Host Name: localhost.localdomian",
+          "IP Address: 10.9.62.100",
+          "Power status: on"
+        ]
+      };
+    }, 3000 );
 
     $scope.infoStatusTitless = {
       "iconImage": imagePath + "/OpenShift-logo.svg",
@@ -79,6 +103,8 @@ angular.module( 'patternfly.card' ).component('pfInfoStatusCard', {
   bindings: {
     status: '=',
     showTopBorder: '@?',
+    showSpinner: '<?',
+    spinnerText: '@?',
     htmlContent: '@?'
   },
   templateUrl: 'card/info-status/info-status-card.html',
@@ -88,6 +114,7 @@ angular.module( 'patternfly.card' ).component('pfInfoStatusCard', {
     ctrl.$onInit = function () {
       ctrl.shouldShowTopBorder = (ctrl.showTopBorder === 'true');
       ctrl.shouldShowHtmlContent = (ctrl.htmlContent === 'true');
+      ctrl.showSpinner = ctrl.showSpinner === true;
       ctrl.trustAsHtml = function (html) {
         return $sce.trustAsHtml(html);
       };
