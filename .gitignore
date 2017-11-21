@@ -21,7 +21,6 @@ dist/docs/img
 dist/docs/index.html
 coverage/
 
-/docs
 /dist
 node_modules
 npm-debug.log
