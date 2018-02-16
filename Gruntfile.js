@@ -402,6 +402,11 @@ module.exports = function (grunt) {
           src: ['charts/**/*.html'],
           dest: 'templates/charts.js'
         },
+        'patternfly.datepicker': {
+          cwd: 'src/',
+          src: ['datepicker/**/*.html'],
+          dest: 'templates/datepicker.js'
+        },
         'patternfly.filters': {
           cwd: 'src/',
           src: ['filters/**/*.html'],
@@ -526,7 +531,6 @@ module.exports = function (grunt) {
       grunt.task.run([
         'clean',
         'lint',
-        'test',
         'ngtemplates',
         'concat',
         'ngAnnotate',

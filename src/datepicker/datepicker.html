@@ -1,6 +1,14 @@
 <p class="input-group">
-  <input type="text" class="form-control" uib-datepicker-popup="{{format}}" datepicker-options="dateOptions" is-open="isOpen" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" show-button-bar="showButtonBar"/>
+  <input type="text" class="form-control"
+         ng-model="$ctrl.dt"
+         uib-datepicker-popup="$ctrl.format"
+         datepicker-options="$ctrl.dateOptions"
+         is-open="$ctrl.isOpen"
+         ng-required="true"
+         close-text="Close"
+         alt-input-formats="altInputFormats"
+         show-button-bar="$ctrl.showButtonBar"/>
   <span class="input-group-btn">
-    <button type="button" class="btn btn-default" ng-click="open()"><i class="glyphicon glyphicon-calendar"></i></button>
+    <button type="button" class="btn btn-default" ng-click="$ctrl.open()"><i class="glyphicon glyphicon-calendar"></i></button>
   </span>
 </p>

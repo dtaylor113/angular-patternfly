@@ -3,18 +3,19 @@ angular.module('patternfly.datepicker').component('pfBootstrapDatepicker', {
   templateUrl: 'datepicker/datepicker.html',
   controller: function () {
     'use strict';
-    //
-    // var ctrl = this;
-    // ctrl.$onInit = function () {
-    //   $scope.format = "dd-MMMM-yyyy";
-    //   $scope.showButtonBar = false;
-    //   $scope.dateOptions = {
-    //     showWeeks : false
-    //   };
-    //   $scope.open = function() {
-    //     $scope.isOpen = true;
-    //   };
-    //   $scope.isOpen = false;
-    // };
+
+    var ctrl = this;
+    ctrl.$onInit = function () {
+      ctrl.dt = new Date();
+      ctrl.format = "dd-MMMM-yyyy";
+      ctrl.showButtonBar = false;
+      ctrl.dateOptions = {
+        showWeeks : false
+      };
+      ctrl.open = function() {
+        ctrl.isOpen = true;
+      };
+      ctrl.isOpen = false;
+    };
   }
 });

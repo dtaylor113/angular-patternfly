@@ -10,8 +10,8 @@
  <example module="patternfly.datepicker">
 
    <file name="index.html">
-    <div ng-controller="DatepickerPopupDemoCtrl">
-      <datepicker pf-bootstrap-datepicker></datepicker>
+    <div>
+      <pf-bootstrap-datepicker></pf-bootstrap-datepicker>
     </div>
    </file>
 
