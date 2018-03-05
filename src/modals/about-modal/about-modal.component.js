@@ -96,7 +96,7 @@ angular.module('patternfly.modals')
     productInfo: '=',
     title: '=?'
   },
-  templateUrl: 'modals/about-modal.html',
+  templateUrl: 'modals/about-modal/about-modal.html',
   transclude: true,
   controller: function ($uibModal, $transclude) { //$uibModal, $transclude, $window
     'use strict';
