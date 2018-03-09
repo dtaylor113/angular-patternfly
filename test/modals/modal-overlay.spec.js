@@ -2,7 +2,9 @@ describe('Component: pfModalOverlay', function () {
   var $scope;
   var $compile;
   var $uibModal;
-  var modalInstance;
+  var $templateCache;
+  var modal, modal2;
+  var button, button2;
 
   // load the controller's module
   beforeEach(module(
@@ -10,10 +12,11 @@ describe('Component: pfModalOverlay', function () {
     'modals/modal-overlay/modal-overlay.html'
   ));
 
-  beforeEach(inject(function (_$compile_, _$rootScope_, _$uibModal_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_, _$uibModal_, _$templateCache_) {
     $compile = _$compile_;
     $scope = _$rootScope_;
     $uibModal = _$uibModal_;
+    $templateCache = _$templateCache_;
   }));
 
   var compileHtml = function (markup, scope) {
@@ -24,11 +27,12 @@ describe('Component: pfModalOverlay', function () {
   };
 
   var closeModal = function (scope) {
-    modalInstance.close();
+    scope.isOpen = false;
+    scope.$digest();
 
     // Although callbacks are executed properly, the modal is not removed in this
     // environment -- must remove it manually to mimic UI Bootstrap.
-    var modal = $("#testModal");
+    var modal = angular.element(document.querySelector('.modal-overlay'));
     if (modal) {
       modal.remove();
     }
@@ -36,144 +40,120 @@ describe('Component: pfModalOverlay', function () {
     if (modalBackdrop) {
       modalBackdrop.remove();
     }
-
-    scope.$digest();
   };
 
   beforeEach(function () {
+    // first example
     $scope.open = function () {
-      modalInstance = $uibModal.open({
-        animation: true,
-        component: 'pfModalOverlay',
-        resolve : {
-          modalId : function() {
-            return "testModal";
-          },
-          modalTitle : function () {
-            return "Test Title";
-          },
-          modalBody : function() {
-            return "<div>Test Html</div>";
-          },
-          actionButtons : function() {
-            return [
-              {
-                label: "Cancel",
-                close: true
-              },
-              {
-                label: "Save",
-                class: "btn-primary customClass"
-              }];
-          }
-        }
-      });
+      $scope.isOpen = true;
+    };
+    $scope.onClose = function() {
+      $scope.isOpen = false;
     };
 
+    $scope.isOpen = false;
+    $scope.modalId = "testModal";
+    $scope.modalTitle = "Test Title";
+    $scope.modalBodyPath = 'pf-modal-body.html';
+    $scope.actionButtons = [
+      {
+        label: "Cancel",
+        close: true
+      },
+      {
+        label: "Save",
+        class: "btn-primary custom-class"
+      }];
+
+    // second example
+    $scope.titleId = "testTitle";
+    $scope.hideCloseIcon = true;
+    $scope.isOpen2 = false;
     $scope.open2 = function () {
-      modalInstance = $uibModal.open({
-        animation: true,
-        component: 'pfModalOverlay',
-        resolve : {
-          modalId : function() {
-            return "testModal";
-          },
-          titleId : function() {
-            return "testTitle";
-          },
-          hideCloseIcon : function () {
-            return true;
-          },
-          modalTitle : function () {
-            return "Test Title";
-          },
-          modalBody : function() {
-            return '<div>Test Html</div>';
-          },
-          actionButtons : function() {
-            return [{
-              label: "Cancel",
-              close: true
-            },
-            {
-              label: "Test",
-              disabled: true
-            },
-            {
-              label: "Save",
-              class: "btn-primary"
-            }];
-          }
-        }
-      });
+      $scope.isOpen2 = true;
     };
+    $scope.onClose2 = function() {
+      $scope.isOpen2 = false;
+    };
+
+    $scope.actionButtons2 = [
+      {
+        label: "Cancel",
+        close: true
+      },
+      {
+        label: "Test",
+        isDisabled: true
+      },
+      {
+        label: "Save",
+        class: "btn-primary"
+      }];
+
+    $templateCache.put("pf-modal-body.html", "<div class='ng-scope'>Test Html</div>");
+    var buttonHtml = '<button id="testButton" ng-click="open()">Test</button>';
+    var modalHtml = '<pf-modal-overlay is-open="isOpen" on-close="onClose()" modal-id="modalId" modal-body-path="modalBodyPath" modal-title="modalTitle" action-buttons="actionButtons"></pf-modal-overlay>';
+    modal = compileHtml(modalHtml, $scope);
+    button = compileHtml(buttonHtml, $scope);
+
+    var buttonHtml2 = '<button id="testButton" ng-click="open2()">Test</button>';
+    var modalHtml2 = '<pf-modal-overlay is-open="isOpen2" on-close="onClose2()" modal-id="modalId" hide-close-icon="hideCloseIcon" modal-body-path="modalBodyPath" modal-title="modalTitle" title-id="titleId" action-buttons="actionButtons2"></pf-modal-overlay>';
+    modal2 = compileHtml(modalHtml2, $scope);
+    button2 = compileHtml(buttonHtml2, $scope);
   });
 
   it('should open the modal with button click', function () {
-    var element = compileHtml('<button id="testButton" ng-click="open()">Test</button>', $scope),
-      modal$;
-    modal$ = $('#testModal');
-    expect(modal$.length).toBe(0);
-    eventFire(element[0], 'click');
-    modal$ = $('#testModal');
-    expect(modal$.length).toBe(1);
+    expect($("#modalTitle").length).toBe(0);
+    eventFire(button[0], 'click');
+    expect($("#modalTitle").length).toBe(1);
     closeModal($scope);
   });
 
   it('should set the id of the modal', function () {
-    var element = compileHtml('<button id="testButton" ng-click="open()">Test</button>', $scope),
-      modal$;
-    eventFire(element[0], 'click');
-    modal$ = $('#testModal');
-    expect(modal$.length).toBe(1);
+    eventFire(button[0], 'click');
+    var modal$ = $('.modal-overlay', modal[1]);
+    expect(modal$.attr("id")).toBe("testModal");
     closeModal($scope);
   });
 
   it('should open the about modal programmatically', function () {
-    var modal$ = $('#testModal');
-    expect(modal$.length).toBe(0);
+    expect($("#modalTitle").length).toBe(0);
     $scope.open();
     $scope.$digest();
-    modal$ = $('#testModal');
-    expect(modal$.length).toBe(1);
+    expect($("#modalTitle").length).toBe(1);
     closeModal($scope);
   });
 
   it('should set the title of the modal', function () {
-    var element = compileHtml('<button id="testButton" ng-click="open()">Test</button>', $scope);
-    eventFire(element[0], 'click');
+    eventFire(button[0], 'click');
     var title = $('.modal-header .modal-title').text();
     expect(title).toBe('Test Title');
     closeModal($scope);
   });
 
   it('should set the title id to "modalTitle" if none specified', function () {
-    var element = compileHtml('<button id="testButton" ng-click="open()">Test</button>', $scope);
-    eventFire(element[0], 'click');
+    eventFire(button[0], 'click');
     var title = $('#modalTitle');
     expect(title.length).toBe(1);
     closeModal($scope);
   });
 
   it('should set the title id when specified', function () {
-    var element = compileHtml('<button id="testButton" ng-click="open2()">Test</button>', $scope);
-    eventFire(element[0], 'click');
+    eventFire(button2[0], 'click');
     var title = $('#testTitle');
     expect(title.length).toBe(1);
     closeModal($scope);
   });
 
   it('should show the "x" close icon by default', function () {
-    var element = compileHtml('<button id="testButton" ng-click="open()">Test</button>', $scope);
-    eventFire(element[0], 'click');
+    eventFire(button[0], 'click');
     var closeButton = $('button.close');
     expect(closeButton.length).toBe(1);
     closeModal($scope);
   });
 
   it('should close the modal when "x" close icon is clicked', function () {
-    var element = compileHtml('<button id="testButton" ng-click="open()">Test</button>', $scope);
-    eventFire(element[0], 'click');
+    eventFire(button[0], 'click');
     var modal$ = $('#testModal');
     expect(modal$.length).toBe(1);
     var closeButton = $('button.close')[0];
@@ -184,32 +164,28 @@ describe('Component: pfModalOverlay', function () {
   });
 
   it('should hide the close icon when hide-close-icon set to true', function () {
-    var element = compileHtml('<button id="testButton" ng-click="open2()">Test</button>', $scope);
-    eventFire(element[0], 'click');
+    eventFire(button2[0], 'click');
     var closeButton = $('button.close');
     expect(closeButton.length).toBe(0);
     closeModal($scope);
   });
 
   it('should set the html in the body of the modal to <div>Test Html</div>', function () {
-    var element = compileHtml('<button id="testButton" ng-click="open()">Test</button>', $scope);
-    eventFire(element[0], 'click');
+    eventFire(button[0], 'click');
     var body = $('.modal-body').html();
-    expect(body).toBe("<div>Test Html</div>");
+    expect(body).toBe('<div class="ng-scope">Test Html</div>');
     closeModal($scope);
   });
 
   it('should display 3 buttons', function() {
-    var element = compileHtml('<button id="testButton" ng-click="open2()">Test</button>', $scope);
-    eventFire(element[0], 'click');
+    eventFire(button2[0], 'click');
     var buttons = $('button.btn');
     expect(buttons.length).toBe(3);
     closeModal($scope);
   });
 
   it('should display "Cancel" on the first button', function() {
-    var element = compileHtml('<button id="testButton" ng-click="open2()">Test</button>', $scope);
-    eventFire(element[0], 'click');
+    eventFire(button2[0], 'click');
     var cancelButton = $('button.btn')[0];
     expect($(cancelButton).html()).toBe("Cancel");
     closeModal($scope);

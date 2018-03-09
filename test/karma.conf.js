@@ -11,7 +11,6 @@ module.exports = function (config) {
       'node_modules/jquery/dist/jquery.js',
       'node_modules/datatables.net/js/jquery.dataTables.js',
       'node_modules/moment/moment.js',
-      'node_modules/bootstrap/js/modal.js',
       'node_modules/bootstrap-select/js/bootstrap-select.js',
       'node_modules/d3/d3.js',
       'node_modules/c3/c3.js',
