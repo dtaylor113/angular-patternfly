@@ -90,14 +90,13 @@ describe('Component: pfModalOverlay', function () {
         class: "btn-primary"
       }];
 
-    $templateCache.put("pf-modal-body.html", "<div class='ng-scope'>Test Html</div>");
     var buttonHtml = '<button id="testButton" ng-click="open()">Test</button>';
-    var modalHtml = '<pf-modal-overlay is-open="isOpen" on-close="onClose()" modal-id="modalId" modal-body-path="modalBodyPath" modal-title="modalTitle" action-buttons="actionButtons"></pf-modal-overlay>';
+    var modalHtml = '<pf-modal-overlay is-open="isOpen" on-close="onClose()" modal-id="modalId" modal-body-path="modalBodyPath" modal-title="modalTitle" action-buttons="actionButtons"><div class="ng-scope">Test Html</div></pf-modal-overlay>';
     modal = compileHtml(modalHtml, $scope);
     button = compileHtml(buttonHtml, $scope);
 
     var buttonHtml2 = '<button id="testButton" ng-click="open2()">Test</button>';
-    var modalHtml2 = '<pf-modal-overlay is-open="isOpen2" on-close="onClose2()" modal-id="modalId" hide-close-icon="hideCloseIcon" modal-body-path="modalBodyPath" modal-title="modalTitle" title-id="titleId" action-buttons="actionButtons2"></pf-modal-overlay>';
+    var modalHtml2 = '<pf-modal-overlay is-open="isOpen2" on-close="onClose2()" modal-id="modalId" hide-close-icon="hideCloseIcon" modal-body-path="modalBodyPath" modal-title="modalTitle" title-id="titleId" action-buttons="actionButtons2"><div class="ng-scope">Test Html</div></pf-modal-overlay>';
     modal2 = compileHtml(modalHtml2, $scope);
     button2 = compileHtml(buttonHtml2, $scope);
   });
