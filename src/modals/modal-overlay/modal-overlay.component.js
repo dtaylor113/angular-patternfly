@@ -6,29 +6,25 @@ angular.module('patternfly.modals')
       hideCloseIcon: "<?",
       backdropClose: "<?",
       modalTitle: "=",
-      modalBodyPath: "=",
+      modalBodyTemplate: "=",
+      modalBodyScope: "=?",
       actionButtons: "<",
       close: "&onClose",
       isOpen: '<?'
     },
     templateUrl: 'modals/modal-overlay/modal-overlay.html',
-    transclude: true,
-    controller: function ( $uibModal, $transclude) {
+    controller: function ( $uibModal ) {
       'use strict';
 
       var ctrl = this;
 
-      // The ui-bootstrap modal only supports either template or templateUrl as a way to specify the content.
-      // When the content is retrieved, it is compiled and linked against the provided scope by the $uibModal service.
-      // Unfortunately, there is no way to provide transclusion there.
-      //
-      // The solution below embeds a placeholder directive (i.e., pfModalOverlayTransclude) to append the transcluded DOM.
-      // The transcluded DOM is from a different location than the modal, so it needs to be handed over to the
-      // placeholder directive. Thus, we're passing the actual DOM, not the parsed HTML.
-
       ctrl.open = function () {
         $uibModal.open({
           component: 'pfModalOverlayContent',
+          //templateUrl: 'modals/modal-overlay/modal-overlay.html',
+          //controller: 'pfModalInstanceCtrl',
+          //controllerAs: 'ctrl',
+          //bindToController: true,
           backdrop: ctrl.backdropClose ? true : 'static',
           resolve: {
             modalId: function () {
@@ -43,21 +39,19 @@ angular.module('patternfly.modals')
             modalTitle: function () {
               return ctrl.modalTitle;
             },
-            content: function () {
-              var transcludedContent;
-              $transclude(function (clone) {
-                transcludedContent = clone;
-              });
-              return transcludedContent;
+            modalBodyTemplate : function () {
+              return ctrl.modalBodyTemplate;
+            },
+            modalBodyScope : function () {
+              return ctrl.modalBodyScope;
             },
             actionButtons: function () {
               return ctrl.actionButtons;
             }
           }
         })
-          .result.then(
-          function () {
-            ctrl.close(); // closed
+          .result.then(function (modalBodyScope) {
+            ctrl.close(modalBodyScope); // closed
           },
           function () {
             ctrl.close(); // dismissed
@@ -79,10 +73,37 @@ angular.module('patternfly.modals')
     }
   });
 
+angular.module('patternfly.modals').controller('pfModalInstanceCtrl',
+  function ($uibModalInstance,
+            modalId,
+            titleId,
+            hideCloseIcon,
+            modalTitle,
+            modalBodyTemplate,
+            modalBodyScope,
+            actionButtons) {
+    'use strict';
+    var ctrl = this;
+
+    ctrl.modalId = modalId;
+    ctrl.titleId = titleId || "modalTitle";
+    ctrl.modalTitle = modalTitle;
+    ctrl.hideCloseIcon = hideCloseIcon || false;
+    ctrl.modalBodyTemplate = modalBodyTemplate;
+    ctrl.modalBodyScope = modalBodyScope;
+    ctrl.actionButtons = actionButtons;
+
+    ctrl.ok = function (modalBodyScope) {
+      $uibModalInstance.close(modalBodyScope);
+    };
+
+    ctrl.cancel = function () {
+      $uibModalInstance.dismiss('cancel');
+    };
+  });
 
 angular.module('patternfly.modals').component('pfModalOverlayContent', {
   templateUrl: 'modal-overlay-template.html',
-  transclude: true,
   bindings: {
     resolve: '<',
     close: '&',
@@ -97,14 +118,15 @@ angular.module('patternfly.modals').component('pfModalOverlayContent', {
       ctrl.titleId = ctrl.resolve.titleId || "modalTitle";
       ctrl.modalTitle = ctrl.resolve.modalTitle;
       ctrl.hideCloseIcon = ctrl.resolve.hideCloseIcon || false;
-      ctrl.template = ctrl.resolve.content;
+      ctrl.modalBodyTemplate = ctrl.resolve.modalBodyTemplate;
+      ctrl.modalBodyScope = ctrl.resolve.modalBodyScope;
       ctrl.actionButtons = ctrl.resolve.actionButtons;
 
       ctrl.ok = function (actionFn) {
         if (typeof actionFn === "function") {
-          actionFn();
+          actionFn(ctrl.modalBodyScope);
         }
-        ctrl.close();
+        ctrl.close(ctrl.modalBodyScope);
       };
 
       ctrl.cancel = function (actionFn) {
@@ -116,13 +138,4 @@ angular.module('patternfly.modals').component('pfModalOverlayContent', {
     };
 
   }
-});
-
-angular.module('patternfly.modals').directive("pfModalOverlayTransclude", function ($parse) {
-  'use strict';
-  return {
-    link: function (scope, element, attrs) {
-      element.append($parse(attrs.pfModalOverlayTransclude)(scope));
-    }
-  };
 });

@@ -36,99 +36,97 @@
  <example module="patternfly.modals">
 
  <file name="index.html">
- <div ng-controller="DemoModalOverlayCtrl">
-    <button ng-click="open()" class="btn btn-default">Launch Modal Overlay</button>
-    <pf-modal-overlay is-open="isOpen"
-          on-close="onClose()"
-          modal-id="modalId"
-          modal-body-path="modalBodyPath"
-          modal-title="modalTitle"
-          action-buttons="actionButtons">
-       <form name="demoForm" class="form-horizontal">
-         <div class="form-group">
-           <label class="col-sm-3 control-label" for="textInput">Field One</label>
-           <div class="col-sm-9">
-              <input type="text" id="textInput" class="form-control"/>
-           </div>
-         </div>
-         <div class="form-group">
-           <label class="col-sm-3 control-label" for="textInput2">Field Two</label>
-           <div class="col-sm-9"><input type="text" id="textInput2" class="form-control"/></div>
-         </div>
-         <div class="form-group">
-           <label class="col-sm-3 control-label" for="textInput3">Field Three</label>
-           <div class="col-sm-9"><input type="text" id="textInput3" class="form-control"/></div>
-         </div>
-       </form>
- </pf-modal-overlay>
+ <div ng-controller="DemoModalOverlayCtrl" class="example-container">
+    <button ng-click="openForm()" class="btn btn-default">Launch Modal Overlay w/ Form</button>
+    <pf-modal-overlay is-open="isFormOpen"
+        on-close="onClose()"
+        modal-id="modalFormId"
+        modal-body-template="modalFormTemplate"
+        modal-body-scope="modalFormScope"
+        modal-title="modalFormTitle"
+        action-buttons="formActionButtons">
+    </pf-modal-overlay>
 
-   <button ng-click="open2()" class="btn btn-default">Launch Second Modal Overlay</button>
-   <pf-modal-overlay is-open="isOpen2"
-         on-close="onClose2()"
-         modal-id="modalId2"
-         modal-body-path="modalBodyPath2"
-         modal-title="modalTitle2"
-         hide-close-icon="hideCloseIcon2"
-         backdrop-close="backdropClose"
-         title-id="titleId2"
-         action-buttons="actionButtons2">
-       <div class="row">
-          <div class="col-md-12">Donec consequat dignissim neque, sed suscipit quam egestas in. Fusce bibendum laoreet lectus commodo interdum. Vestibulum odio ipsum, tristique et ante vel, iaculis placerat nulla. Suspendisse iaculis urna feugiat lorem semper, ut iaculis risus tempus.</div>
-       </div>
- </pf-modal-overlay>
+    <button ng-click="openConfirm()" class="btn btn-default">Launch Confirm Overlay</button>
+    <pf-modal-overlay is-open="isConfirmOpen"
+        on-close="onClose()"
+        modal-id="modalConfirmId"
+        modal-body-template="modalConfirmTemplate"
+        modal-title="modalConfirmTitle"
+        action-buttons="confirmActionButtons">
+    </pf-modal-overlay>
+
+    <div class="col-md-12">
+      <label class="actions-label">Actions: </label>
+    </div>
+    <div class="col-md-12">
+      <textarea rows="10" class="col-md-12">{{actionsText}}</textarea>
+    </div>
  </div>
- </file>
+ <script type="text/ng-template" id="demo-confirm.html">
+   <div class="row">
+     <div class="col-md-12">Are you really, really, reeaaally sure you want to continue?</div>
+   </div>
+ </script>
+  </file>
 
  <file name="script.js">
  angular.module('patternfly.modals').controller('DemoModalOverlayCtrl', function( $scope, $log ) {
 
       // first example
-      $scope.open = function () {
-          $scope.isOpen = true;
-       };
-      $scope.onClose = function() {
-          $scope.isOpen = false;
-       };
-
-      $scope.modalId = "demoModal1";
-      $scope.modalTitle = "First Demo Title";
-      $scope.modalBodyPath = 'pf-modal-body.html';
-      $scope.actionButtons = [
-          {
-            label: "Cancel",
-            isCancel: true
-          },
-          {
-            label: "Save",
-            class: "btn-primary custom-class",
-            actionFn: function() {
-              $log.info("Save clicked");
-            }
-          }];
-
-      // second example
-      $scope.open2 = function () {
-          $scope.isOpen2 = true;
-       };
-      $scope.onClose2 = function() {
-          $scope.isOpen2 = false;
+      $scope.openForm = function () {
+        $scope.isFormOpen = true;
+      };
+      $scope.openConfirm = function () {
+        $scope.isConfirmOpen = true;
+      };
+      $scope.onClose = function(modalBodyScope) {
+          $scope.isConfirmOpen = false;
+          $scope.isFormOpen = false;
        };
 
-      $scope.modalId2 = "demoModal2";
-      $scope.modalTitle2 = "Second Demo Title";
-      $scope.titleId2 = "demoTitle2";
-      $scope.modalBodyPath2 = 'pf-modal-body2.html';
-      $scope.hideCloseIcon2 = true;
-      $scope.backdropClose = true;
-      $scope.actionButtons2 = [
-          {
-            label: "Cancel",
-            isCancel: true
-          },
-          {
-            label: "OK",
-            class: "btn-primary"
-          }];
+      $scope.modalFormId = "formModal";
+      $scope.modalFormTitle = "Form Modal Demo";
+      $scope.modalFormTemplate = 'modals/examples/demo-form.html';
+      $scope.modalFormScope = {
+        isForm: true,
+        fieldOneVal:   "field one value",
+        fieldTwoVal:   "field two value",
+        fieldThreeVal: "field three value"
+      }
+
+      $scope.modalConfirmId = "confirmModal";
+      $scope.modalConfirmTitle = "Confirm Modal Demo";
+      $scope.modalConfirmTemplate = 'demo-confirm.html';
+      $scope.confirmActionButtons = [
+        {
+          label: "Cancel",
+          isCancel: true
+        },
+        {
+          label: "Ok",
+          class: "btn-primary custom-class",
+          actionFn: function() {
+            $scope.actionsText = 'Ok clicked\n' + $scope.actionsText;
+          }
+        }
+      ];
+
+      $scope.actionsText = "";
+
+      $scope.formActionButtons = [
+        {
+          label: "Cancel",
+          isCancel: true
+        },
+        {
+          label: "Save",
+          class: "btn-primary custom-class",
+          actionFn: function(modalBodyScope) {
+            $scope.actionsText = 'Save clicked.  Form Values are: \n' + JSON.stringify(modalBodyScope, null, ' ') + '\n' + $scope.actionsText;
+          }
+        }
+      ];
  });
 
  </file>

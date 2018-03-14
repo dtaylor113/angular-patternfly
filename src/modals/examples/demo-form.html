@@ -1,0 +1,17 @@
+<ng-form name="demoForm" class="form-horizontal">
+  <div class="form-group">
+    <label class="col-sm-3 control-label required-pf" for="textInput">Field One</label>
+    <div class="col-sm-9">
+      <input type="text" id="textInput" ng-required="true" ng-model="$ctrl.modalBodyScope.fieldOneVal" class="form-control"/>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="textInput2">Field Two</label>
+    <div class="col-sm-9"><input type="text" id="textInput2" ng-model="$ctrl.modalBodyScope.fieldTwoVal" class="form-control"/></div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="textInput3">Field Three</label>
+    <div class="col-sm-9"><input type="text" id="textInput3" ng-model="$ctrl.modalBodyScope.fieldThreeVal" class="form-control"/></div>
+  </div>
+  {{"demoForm.$invalid: " + demoForm.$invalid}} | {{"demoForm.$pristine: " + demoForm.$pristine}}
+</ng-form>
