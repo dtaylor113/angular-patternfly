@@ -43,8 +43,12 @@ angular.module('patternfly.modals')
             modalTitle: function () {
               return ctrl.modalTitle;
             },
-            modalBodyPath: function () {
-              return ctrl.modalBodyPath;
+            content: function () {
+              var transcludedContent;
+              $transclude(function (clone) {
+                transcludedContent = clone;
+              });
+              return transcludedContent;
             },
             actionButtons: function () {
               return ctrl.actionButtons;
@@ -93,7 +97,7 @@ angular.module('patternfly.modals').component('pfModalOverlayContent', {
       ctrl.titleId = ctrl.resolve.titleId || "modalTitle";
       ctrl.modalTitle = ctrl.resolve.modalTitle;
       ctrl.hideCloseIcon = ctrl.resolve.hideCloseIcon || false;
-      ctrl.modalBodyPath = ctrl.resolve.modalBodyPath;
+      ctrl.template = ctrl.resolve.content;
       ctrl.actionButtons = ctrl.resolve.actionButtons;
 
       ctrl.ok = function (actionFn) {
@@ -112,4 +116,13 @@ angular.module('patternfly.modals').component('pfModalOverlayContent', {
     };
 
   }
+});
+
+angular.module('patternfly.modals').directive("pfModalOverlayTransclude", function ($parse) {
+  'use strict';
+  return {
+    link: function (scope, element, attrs) {
+      element.append($parse(attrs.pfModalOverlayTransclude)(scope));
+    }
+  };
 });

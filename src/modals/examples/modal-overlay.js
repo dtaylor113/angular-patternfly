@@ -43,7 +43,24 @@
           modal-id="modalId"
           modal-body-path="modalBodyPath"
           modal-title="modalTitle"
-          action-buttons="actionButtons"></pf-modal-overlay>
+          action-buttons="actionButtons">
+       <form name="demoForm" class="form-horizontal">
+         <div class="form-group">
+           <label class="col-sm-3 control-label" for="textInput">Field One</label>
+           <div class="col-sm-9">
+              <input type="text" id="textInput" class="form-control"/>
+           </div>
+         </div>
+         <div class="form-group">
+           <label class="col-sm-3 control-label" for="textInput2">Field Two</label>
+           <div class="col-sm-9"><input type="text" id="textInput2" class="form-control"/></div>
+         </div>
+         <div class="form-group">
+           <label class="col-sm-3 control-label" for="textInput3">Field Three</label>
+           <div class="col-sm-9"><input type="text" id="textInput3" class="form-control"/></div>
+         </div>
+       </form>
+ </pf-modal-overlay>
 
    <button ng-click="open2()" class="btn btn-default">Launch Second Modal Overlay</button>
    <pf-modal-overlay is-open="isOpen2"
@@ -54,7 +71,11 @@
          hide-close-icon="hideCloseIcon2"
          backdrop-close="backdropClose"
          title-id="titleId2"
-         action-buttons="actionButtons2"></pf-modal-overlay>
+         action-buttons="actionButtons2">
+       <div class="row">
+          <div class="col-md-12">Donec consequat dignissim neque, sed suscipit quam egestas in. Fusce bibendum laoreet lectus commodo interdum. Vestibulum odio ipsum, tristique et ante vel, iaculis placerat nulla. Suspendisse iaculis urna feugiat lorem semper, ut iaculis risus tempus.</div>
+       </div>
+ </pf-modal-overlay>
  </div>
  </file>
 
@@ -110,29 +131,6 @@
           }];
  });
 
- </file>
-
- <file name="pf-modal-body.html">
-  <form class="form-horizontal">
-    <div class="form-group">
-      <label class="col-sm-3 control-label" for="textInput">Field One</label>
-      <div class="col-sm-9"><input type="text" id="textInput" class="form-control"/></div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-3 control-label" for="textInput2">Field Two</label>
-      <div class="col-sm-9"><input type="text" id="textInput2" class="form-control"/></div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-3 control-label" for="textInput3">Field Three</label>
-      <div class="col-sm-9"><input type="text" id="textInput3" class="form-control"/></div>
-    </div>
-  </form>
- </file>
-
- <file name="pf-modal-body2.html">
- <div class="row">
-    <div class="col-md-12">Donec consequat dignissim neque, sed suscipit quam egestas in. Fusce bibendum laoreet lectus commodo interdum. Vestibulum odio ipsum, tristique et ante vel, iaculis placerat nulla. Suspendisse iaculis urna feugiat lorem semper, ut iaculis risus tempus.</div>
- </div>
  </file>
  </example>
  */
