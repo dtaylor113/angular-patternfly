@@ -11,7 +11,7 @@
       <button ng-repeat="actionButton in $ctrl.actionButtons"
               class="btn {{actionButton.class || 'btn-default'}}"
               ng-click="actionButton.isCancel ? $ctrl.cancel(actionButton.actionFn) : $ctrl.ok(actionButton.actionFn)"
-              ng-disabled="{{actionButton.isDisabled}}">{{actionButton.label}}</button>
+              ng-disabled="($ctrl.isInvalid && !actionButton.isCancel) || actionButton.isDisabled">{{actionButton.label}}</button>
     </div>
   </div>
 </script>
