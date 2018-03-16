@@ -6,12 +6,20 @@
       </button>
       <h4 class="modal-title" ng-attr-id="{{$ctrl.titleId}}">{{$ctrl.modalTitle}}</h4>
     </div>
-    <div pf-modal-overlay-transclude="$ctrl.template" class="modal-body"></div>
+    <div class="modal-body">
+      <form name="pfModalOverlayForm" ng-show="$ctrl.isForm">
+        <div pf-modal-overlay-transclude="$ctrl.template" ng-if="$ctrl.isForm"></div>
+      </form>
+      <div ng-if="!$ctrl.isForm" pf-modal-overlay-transclude="$ctrl.template"></div>
+    </div>
     <div class="modal-footer">
       <button ng-repeat="actionButton in $ctrl.actionButtons"
               class="btn {{actionButton.class || 'btn-default'}}"
               ng-click="actionButton.isCancel ? $ctrl.cancel(actionButton.actionFn) : $ctrl.ok(actionButton.actionFn)"
-              ng-disabled="($ctrl.isInvalid && !actionButton.isCancel) || actionButton.isDisabled">{{actionButton.label}}</button>
+              ng-disabled="(pfModalOverlayForm.$invalid && !actionButton.isCancel) || actionButton.isDisabled">{{actionButton.label}}</button>
     </div>
+    <br/>{{"isForm: " + $ctrl.isForm}}
+    <br/>{{"pfModalOverlayForm is invalid: " + pfModalOverlayForm.$invalid}}
+    <br/>{{"pfModalOverlayForm is pristine: " + pfModalOverlayForm.$pristine}}
   </div>
 </script>

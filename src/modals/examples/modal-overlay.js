@@ -42,10 +42,9 @@
           modal-id="modalId"
           modal-title="modalTitle"
           action-buttons="actionButtons"
-          is-invalid="demoForm.$invalid || demoForm.$pristine">
-       {{"is-invalid = " + demoForm.$invalid || demoForm.$pristine}}
-       <form name="demoForm" class="form-horizontal">
-         <div class="form-group">
+          is-form="isForm">
+       <ng-form name="demoForm" class="form-horizontal">
+         <div class="form-group" ng-init="setForm(demoForm)">
            <label class="col-sm-3 control-label required-pf" for="textInput">Field One</label>
            <div class="col-sm-9">
               <input type="text" id="textInput" class="form-control" ng-model="inputs.first" ng-required="true"/>
@@ -63,7 +62,7 @@
               <input type="text" id="textInput3" class="form-control" ng-model="inputs.third"/>
            </div>
          </div>
-       </form>
+       </ng-form>
     </pf-modal-overlay>
 
    <button ng-click="open2()" class="btn btn-default">Launch Second Modal Overlay</button>
@@ -94,10 +93,15 @@
       // first example
       $scope.inputs = {
         first: "",
-        second: "",
+        second: "test",
         third: ""
       };
       $scope.actionsText = "";
+      $scope.setForm = function(form) {
+        $scope.demoForm = form;
+      }
+
+      $scope.isForm = true;
       $scope.open = function () {
           $scope.isOpen = true;
        };
@@ -120,9 +124,9 @@
             class: "btn-primary custom-class",
             actionFn: function() {
                 $scope.actionsText = "Save clicked" +
-                    "\nFirst Field" + $scope.inputs.first +
+                    "\nFirst Field: " + $scope.inputs.first +
                     "\nSecond Field: " + $scope.inputs.second +
-                    "\nThird Field" + $scope.inputs.third +
+                    "\nThird Field: " + $scope.inputs.third +
                     "\n" + $scope.actionsText;
             }
           }];

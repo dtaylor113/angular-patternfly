@@ -6,7 +6,7 @@ angular.module('patternfly.modals')
       hideCloseIcon: "<?",
       backdropClose: "<?",
       modalTitle: "=",
-      isInvalid: "<?",
+      isForm: "<?",
       actionButtons: "<",
       close: "&onClose",
       isOpen: '<?'
@@ -53,8 +53,8 @@ angular.module('patternfly.modals')
             actionButtons: function () {
               return ctrl.actionButtons;
             },
-            isInvalid: function() {
-              return ctrl.isInvalid;
+            isForm: function() {
+              return ctrl.isForm;
             }
           }
         })
@@ -102,7 +102,7 @@ angular.module('patternfly.modals').component('pfModalOverlayContent', {
       ctrl.hideCloseIcon = ctrl.resolve.hideCloseIcon || false;
       ctrl.template = ctrl.resolve.content;
       ctrl.actionButtons = ctrl.resolve.actionButtons;
-      ctrl.isInvalid = ctrl.resolve.isInvalid;
+      ctrl.isForm = ctrl.resolve.isForm;
 
       ctrl.ok = function (actionFn) {
         if (typeof actionFn === "function") {
@@ -119,6 +119,9 @@ angular.module('patternfly.modals').component('pfModalOverlayContent', {
       };
     };
 
+    ctrl.$onChanges = function (changesObj) {
+      console.log(changesObj.resolve);
+    };
   }
 });
 
