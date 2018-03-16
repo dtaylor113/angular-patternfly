@@ -54,7 +54,7 @@ describe('Component: pfModalOverlay', function () {
     $scope.isOpen = false;
     $scope.modalId = "testModal";
     $scope.modalTitle = "Test Title";
-    $scope.modalBodyPath = 'pf-modal-body.html';
+    $scope.modalBodyPath = 'modal-body.html';
     $scope.actionButtons = [
       {
         label: "Cancel",
@@ -90,13 +90,14 @@ describe('Component: pfModalOverlay', function () {
         class: "btn-primary"
       }];
 
+    $templateCache.put("modal-body.html", "<div class='ng-scope'>Test Html</div>");
     var buttonHtml = '<button id="testButton" ng-click="open()">Test</button>';
-    var modalHtml = '<pf-modal-overlay is-open="isOpen" on-close="onClose()" modal-id="modalId" modal-body-path="modalBodyPath" modal-title="modalTitle" action-buttons="actionButtons"><div class="ng-scope">Test Html</div></pf-modal-overlay>';
+    var modalHtml = '<pf-modal-overlay is-open="isOpen" on-close="onClose()" modal-id="modalId" modal-body-template="modalBodyPath" modal-title="modalTitle" action-buttons="actionButtons"></pf-modal-overlay>';
     modal = compileHtml(modalHtml, $scope);
     button = compileHtml(buttonHtml, $scope);
 
     var buttonHtml2 = '<button id="testButton" ng-click="open2()">Test</button>';
-    var modalHtml2 = '<pf-modal-overlay is-open="isOpen2" on-close="onClose2()" modal-id="modalId" hide-close-icon="hideCloseIcon" modal-body-path="modalBodyPath" modal-title="modalTitle" title-id="titleId" action-buttons="actionButtons2"><div class="ng-scope">Test Html</div></pf-modal-overlay>';
+    var modalHtml2 = '<pf-modal-overlay is-open="isOpen2" on-close="onClose2()" modal-id="modalId" hide-close-icon="hideCloseIcon" modal-body-template="modalBodyPath" modal-title="modalTitle" title-id="titleId" action-buttons="actionButtons2"></pf-modal-overlay>';
     modal2 = compileHtml(modalHtml2, $scope);
     button2 = compileHtml(buttonHtml2, $scope);
   });
@@ -172,7 +173,7 @@ describe('Component: pfModalOverlay', function () {
   it('should set the html in the body of the modal to <div>Test Html</div>', function () {
     eventFire(button[0], 'click');
     var body = $('.modal-body').html();
-    expect(body).toBe('<div class="ng-scope">Test Html</div>');
+    expect(body.indexOf('<div class="ng-scope">Test Html</div>') !== -1).toBe(true);
     closeModal($scope);
   });
 

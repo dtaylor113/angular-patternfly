@@ -7,13 +7,14 @@ angular.module('patternfly.modals')
       backdropClose: "<?",
       modalTitle: "=",
       isForm: "<?",
+      modalBodyTemplate: "=",
+      modalBodyScope: "=?",
       actionButtons: "<",
       close: "&onClose",
       isOpen: '<?'
     },
     templateUrl: 'modals/modal-overlay/modal-overlay.html',
-    transclude: true,
-    controller: function ( $uibModal, $transclude) {
+    controller: function ( $uibModal ) {
       'use strict';
 
       var ctrl = this;
@@ -43,12 +44,11 @@ angular.module('patternfly.modals')
             modalTitle: function () {
               return ctrl.modalTitle;
             },
-            content: function () {
-              var transcludedContent;
-              $transclude(function (clone) {
-                transcludedContent = clone;
-              });
-              return transcludedContent;
+            modalBodyTemplate: function() {
+              return ctrl.modalBodyTemplate;
+            },
+            modalBodyScope: function() {
+              return ctrl.modalBodyScope;
             },
             actionButtons: function () {
               return ctrl.actionButtons;
@@ -85,7 +85,6 @@ angular.module('patternfly.modals')
 
 angular.module('patternfly.modals').component('pfModalOverlayContent', {
   templateUrl: 'modal-overlay-template.html',
-  transclude: true,
   bindings: {
     resolve: '<',
     close: '&',
@@ -100,7 +99,8 @@ angular.module('patternfly.modals').component('pfModalOverlayContent', {
       ctrl.titleId = ctrl.resolve.titleId || "modalTitle";
       ctrl.modalTitle = ctrl.resolve.modalTitle;
       ctrl.hideCloseIcon = ctrl.resolve.hideCloseIcon || false;
-      ctrl.template = ctrl.resolve.content;
+      ctrl.modalBodyTemplate = ctrl.resolve.modalBodyTemplate;
+      ctrl.modalBodyScope = ctrl.resolve.modalBodyScope;
       ctrl.actionButtons = ctrl.resolve.actionButtons;
       ctrl.isForm = ctrl.resolve.isForm;
 
@@ -118,18 +118,5 @@ angular.module('patternfly.modals').component('pfModalOverlayContent', {
         ctrl.dismiss({$value: 'cancel'});
       };
     };
-
-    ctrl.$onChanges = function (changesObj) {
-      console.log(changesObj.resolve);
-    };
   }
-});
-
-angular.module('patternfly.modals').directive("pfModalOverlayTransclude", function ($parse) {
-  'use strict';
-  return {
-    link: function (scope, element, attrs) {
-      element.append($parse(attrs.pfModalOverlayTransclude)(scope));
-    }
-  };
 });

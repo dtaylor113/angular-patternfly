@@ -22,6 +22,9 @@
  * @param {string=} titleId Id of the title. "modalTitle" by default
  * @param {boolean=} hideCloseIcon Flag indicating that the modal should hide the 'x' close icon.
  * @param {boolean=} backdropClose Flag indicating that the modal should close if user clicks background. False by default
+ * @param {boolean=} isForm Flag indicating that the modal body will contain a form which should be valid before an action button is enabled
+ * @param {string} modalBodyTemplate Path to html template for modal body
+ * @param {object=} modalBodyScope Object containing the scope for the modalBodyTemplate
  * @param {array} actionButtons array of button objects. Each button can have the following properties:<br/>
  * <ul style='list-style-type: none'>
  * <li>.label        - the text to display on the button
@@ -41,28 +44,10 @@
           on-close="onClose()"
           modal-id="modalId"
           modal-title="modalTitle"
+          modal-body-template="template"
+          modal-body-scope="formScope"
           action-buttons="actionButtons"
           is-form="isForm">
-       <ng-form name="demoForm" class="form-horizontal">
-         <div class="form-group" ng-init="setForm(demoForm)">
-           <label class="col-sm-3 control-label required-pf" for="textInput">Field One</label>
-           <div class="col-sm-9">
-              <input type="text" id="textInput" class="form-control" ng-model="inputs.first" ng-required="true"/>
-           </div>
-         </div>
-         <div class="form-group">
-           <label class="col-sm-3 control-label" for="textInput2">Field Two</label>
-           <div class="col-sm-9">
-              <input type="text" id="textInput2" class="form-control" ng-model="inputs.second"/>
-           </div>
-         </div>
-         <div class="form-group">
-           <label class="col-sm-3 control-label" for="textInput3">Field Three</label>
-           <div class="col-sm-9">
-              <input type="text" id="textInput3" class="form-control" ng-model="inputs.third"/>
-           </div>
-         </div>
-       </ng-form>
     </pf-modal-overlay>
 
    <button ng-click="open2()" class="btn btn-default">Launch Second Modal Overlay</button>
@@ -73,10 +58,8 @@
          hide-close-icon="hideCloseIcon2"
          backdrop-close="backdropClose"
          title-id="titleId2"
+         modal-body-template="template2"
          action-buttons="actionButtons2">
-       <div class="row">
-          <div class="col-md-12">Donec consequat dignissim neque, sed suscipit quam egestas in. Fusce bibendum laoreet lectus commodo interdum. Vestibulum odio ipsum, tristique et ante vel, iaculis placerat nulla. Suspendisse iaculis urna feugiat lorem semper, ut iaculis risus tempus.</div>
-       </div>
     </pf-modal-overlay>
    <div>
       <label class="actions-label">Actions: </label>
@@ -90,18 +73,9 @@
  <file name="script.js">
  angular.module('patternfly.modals').controller('DemoModalOverlayCtrl', function( $scope ) {
 
-      // first example
-      $scope.inputs = {
-        first: "",
-        second: "test",
-        third: ""
-      };
       $scope.actionsText = "";
-      $scope.setForm = function(form) {
-        $scope.demoForm = form;
-      }
 
-      $scope.isForm = true;
+      // first example
       $scope.open = function () {
           $scope.isOpen = true;
        };
@@ -111,6 +85,15 @@
 
       $scope.modalId = "demoModal1";
       $scope.modalTitle = "First Demo Title";
+      $scope.isForm = true;
+      $scope.template = "demo-form.html";
+      $scope.formScope = {
+        inputs: {
+          first: "",
+          second: "test",
+          third: ""
+        }
+      };
       $scope.actionButtons = [
           {
             label: "Cancel",
@@ -124,9 +107,9 @@
             class: "btn-primary custom-class",
             actionFn: function() {
                 $scope.actionsText = "Save clicked" +
-                    "\nFirst Field: " + $scope.inputs.first +
-                    "\nSecond Field: " + $scope.inputs.second +
-                    "\nThird Field: " + $scope.inputs.third +
+                    "\nFirst Field: " + $scope.formScope.inputs.first +
+                    "\nSecond Field: " + $scope.formScope.inputs.second +
+                    "\nThird Field: " + $scope.formScope.inputs.third +
                     "\n" + $scope.actionsText;
             }
           }];
@@ -144,6 +127,7 @@
       $scope.titleId2 = "demoTitle2";
       $scope.hideCloseIcon2 = true;
       $scope.backdropClose = true;
+      $scope.template2 = "demo-info.html";
       $scope.actionButtons2 = [
           {
             label: "Cancel",
@@ -161,6 +145,35 @@
           }];
  });
 
+ </file>
+
+ <file name="demo-form.html">
+   <ng-form name="demoForm" class="form-horizontal">
+     <div class="form-group">
+       <label class="col-sm-3 control-label required-pf" for="textInput">Field One</label>
+       <div class="col-sm-9">
+        <input type="text" id="textInput" class="form-control" ng-model="$ctrl.modalBodyScope.inputs.first" ng-required="true"/>
+       </div>
+     </div>
+     <div class="form-group">
+       <label class="col-sm-3 control-label" for="textInput2">Field Two</label>
+       <div class="col-sm-9">
+         <input type="text" id="textInput2" class="form-control" ng-model="$ctrl.modalBodyScope.inputs.second"/>
+       </div>
+     </div>
+     <div class="form-group">
+       <label class="col-sm-3 control-label" for="textInput3">Field Three</label>
+       <div class="col-sm-9">
+         <input type="text" id="textInput3" class="form-control" ng-model="$ctrl.modalBodyScope.inputs.third"/>
+       </div>
+     </div>
+   </ng-form>
+ </file>
+
+ <file name="demo-info.html">
+   <div class="row">
+    <div class="col-md-12">Donec consequat dignissim neque, sed suscipit quam egestas in. Fusce bibendum laoreet lectus commodo interdum. Vestibulum odio ipsum, tristique et ante vel, iaculis placerat nulla. Suspendisse iaculis urna feugiat lorem semper, ut iaculis risus tempus.</div>
+   </div>
  </file>
  </example>
  */

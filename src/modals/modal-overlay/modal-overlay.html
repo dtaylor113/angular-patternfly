@@ -8,9 +8,9 @@
     </div>
     <div class="modal-body">
       <form name="pfModalOverlayForm" ng-show="$ctrl.isForm">
-        <div pf-modal-overlay-transclude="$ctrl.template" ng-if="$ctrl.isForm"></div>
+        <span ng-if="$ctrl.modalBodyTemplate" ng-include="$ctrl.modalBodyTemplate"></span>
       </form>
-      <div ng-if="!$ctrl.isForm" pf-modal-overlay-transclude="$ctrl.template"></div>
+      <span ng-if="!$ctrl.isForm" ng-include="$ctrl.modalBodyTemplate"></span>
     </div>
     <div class="modal-footer">
       <button ng-repeat="actionButton in $ctrl.actionButtons"
@@ -18,8 +18,5 @@
               ng-click="actionButton.isCancel ? $ctrl.cancel(actionButton.actionFn) : $ctrl.ok(actionButton.actionFn)"
               ng-disabled="(pfModalOverlayForm.$invalid && !actionButton.isCancel) || actionButton.isDisabled">{{actionButton.label}}</button>
     </div>
-    <br/>{{"isForm: " + $ctrl.isForm}}
-    <br/>{{"pfModalOverlayForm is invalid: " + pfModalOverlayForm.$invalid}}
-    <br/>{{"pfModalOverlayForm is pristine: " + pfModalOverlayForm.$pristine}}
   </div>
 </script>
