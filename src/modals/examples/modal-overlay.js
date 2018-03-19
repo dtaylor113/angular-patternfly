@@ -38,7 +38,7 @@
  <example module="patternfly.modals">
 
  <file name="index.html">
- <div ng-controller="DemoModalOverlayCtrl">
+ <div ng-controller="DemoModalOverlayCtrl" class="example-container">
     <button ng-click="open()" class="btn btn-default">Launch Modal Overlay</button>
     <pf-modal-overlay is-open="isOpen"
           on-close="onClose()"
@@ -51,21 +51,24 @@
     </pf-modal-overlay>
 
    <button ng-click="open2()" class="btn btn-default">Launch Second Modal Overlay</button>
+   <!-- since 'on-close' is a '&', param passed must be named 'dismissCause' -->
    <pf-modal-overlay is-open="isOpen2"
-         on-close="onClose2()"
+         on-close="onClose2(dismissCause)"
+         on-background-click="onBackgroundClick"
          modal-id="modalId2"
          modal-title="modalTitle2"
          hide-close-icon="hideCloseIcon2"
          backdrop-close="backdropClose"
          title-id="titleId2"
          modal-body-template="template2"
+         modal-body-scope="formScope2"
          action-buttons="actionButtons2">
     </pf-modal-overlay>
    <div>
       <label class="actions-label">Actions: </label>
    </div>
    <div>
-      <textarea rows="3">{{actionsText}}</textarea>
+      <textarea rows="3" class="col-md-12">{{actionsText}}</textarea>
    </div>
  </div>
  </file>
@@ -111,16 +114,46 @@
                     "\nSecond Field: " + $scope.formScope.inputs.second +
                     "\nThird Field: " + $scope.formScope.inputs.third +
                     "\n" + $scope.actionsText;
+                return true;  // must now return true or false to indicate whether modal can be closed.
             }
           }];
 
+
       // second example
+
+      $scope.formScope2 = {
+        agreeCheckbox: false,
+        showAgreeCheckboxMsg: false
+      }
+
       $scope.open2 = function () {
           $scope.isOpen2 = true;
-       };
-      $scope.onClose2 = function() {
-          $scope.isOpen2 = false;
-       };
+      };
+
+      // dismissCause will equal either 'backdropClick' or 'cancel'
+      $scope.onClose2 = function(dismissCause) {
+        $scope.isOpen2 = false;  //this doesn't really do anything!
+        $scope.actionsText = "Second Modal closed via: " + dismissCause + "\n" + $scope.actionsText;
+      };
+
+      // return true or false to close the modal
+      $scope.onBackgroundClick = function() {
+        if(!$scope.formScope2.agreeCheckbox) {
+           $scope.actionsText = "Backdrop Clicked, but agree checkbox unchecked!\n" + $scope.actionsText;
+           $scope.formScope2.showAgreeCheckboxMsg = true;
+           return false;
+        }
+        return true;
+      }
+
+      $scope.canClose = function() {
+        if(!$scope.formScope2.agreeCheckbox) {
+           $scope.actionsText = "Ok Clicked, but agree checkbox unchecked!\n" + $scope.actionsText;
+           $scope.formScope2.showAgreeCheckboxMsg = true;
+           return false;
+        }
+        return true;
+      }
 
       $scope.modalId2 = "demoModal2";
       $scope.modalTitle2 = "Second Demo Title";
@@ -140,7 +173,13 @@
             label: "OK",
             class: "btn-primary",
             actionFn: function() {
-              $scope.actionsText = "OK clicked\n" + $scope.actionsText;
+              var canClose = $scope.canClose();
+              if (canClose) {
+                $scope.actionsText = "OK clicked\n" + $scope.actionsText;
+              } else {
+                $scope.actionsText = "OK clicked, but cannot close modal!\n" + $scope.actionsText;
+              }
+              return canClose;
             }
           }];
  });
@@ -173,6 +212,16 @@
  <file name="demo-info.html">
    <div class="row">
     <div class="col-md-12">Donec consequat dignissim neque, sed suscipit quam egestas in. Fusce bibendum laoreet lectus commodo interdum. Vestibulum odio ipsum, tristique et ante vel, iaculis placerat nulla. Suspendisse iaculis urna feugiat lorem semper, ut iaculis risus tempus.</div>
+    <form role="form">
+      <div class="form-group">
+        <label class="col-sm-12">
+          <input type="checkbox" ng-model="$ctrl.modalBodyScope.agreeCheckbox">I agree</input>
+        </label>
+        <div ng-show="$ctrl.modalBodyScope.showAgreeCheckboxMsg" class="col-sm-12 has-error">
+          <span class="help-block">You must check the 'I agree' checkbox!</span>
+        </div>
+      </div>
+   </form>
    </div>
  </file>
  </example>

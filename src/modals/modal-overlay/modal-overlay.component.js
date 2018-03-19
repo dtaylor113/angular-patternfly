@@ -11,6 +11,7 @@ angular.module('patternfly.modals')
       modalBodyScope: "=?",
       actionButtons: "<",
       close: "&onClose",
+      onBackgroundClick: "=",
       isOpen: '<?'
     },
     templateUrl: 'modals/modal-overlay/modal-overlay.html',
@@ -55,15 +56,19 @@ angular.module('patternfly.modals')
             },
             isForm: function() {
               return ctrl.isForm;
+            },
+            onBackgroundClick: function() {
+              return ctrl.onBackgroundClick;
             }
           }
         })
           .result.then(
           function () {
-            ctrl.close(); // closed
+            ctrl.close({'dismissCause': 'Ok'}); // closed
           },
-          function () {
-            ctrl.close(); // dismissed
+          function (dismissCause) {
+            // dismissCause will be either 'backdropClick', 'cancel', or 'Ok' from function above
+            ctrl.close({'dismissCause': dismissCause}); // dismissed
           }
         );
       };
@@ -90,7 +95,7 @@ angular.module('patternfly.modals').component('pfModalOverlayContent', {
     close: '&',
     dismiss: '&'
   },
-  controller: function () {
+  controller: function ( $scope ) {
     'use strict';
     var ctrl = this;
 
@@ -103,12 +108,19 @@ angular.module('patternfly.modals').component('pfModalOverlayContent', {
       ctrl.modalBodyScope = ctrl.resolve.modalBodyScope;
       ctrl.actionButtons = ctrl.resolve.actionButtons;
       ctrl.isForm = ctrl.resolve.isForm;
+      ctrl.onBackgroundClick = ctrl.resolve.onBackgroundClick;
 
       ctrl.ok = function (actionFn) {
         if (typeof actionFn === "function") {
-          actionFn();
+          // Ok button function now must return 'true' or 'false'
+          // indicating whether the modal can be closed.
+          var canClose = actionFn();
+          if (canClose) {
+            ctrl.close();
+          }
+        } else {
+          ctrl.close();
         }
-        ctrl.close();
       };
 
       ctrl.cancel = function (actionFn) {
@@ -118,5 +130,17 @@ angular.module('patternfly.modals').component('pfModalOverlayContent', {
         ctrl.dismiss({$value: 'cancel'});
       };
     };
+    $scope.$on('modal.closing', function(event, reason, closed) {
+      if (reason === "backdrop click" || reason === "escape key press") {
+        event.preventDefault();
+        // If ctrl.onBackgroundClick() returns 'true', dismiss/close the modal
+        // else ctrl.onBackgroundClick() may have updated $scope vars, so do $digest()
+        if (ctrl.onBackgroundClick()) {
+          ctrl.dismiss({$value: 'backdropClick'});
+        } else {
+          $scope.$digest();
+        }
+      }
+    });
   }
 });
