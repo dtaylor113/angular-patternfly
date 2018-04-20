@@ -86,6 +86,7 @@
     }
   },
   "scripts": {
+    "install": "npm install -g grunt-cli",
     "clean": "grunt clean",
     "build": "grunt build",
     "watch": "grunt watch",
@@ -97,6 +98,7 @@
     "check": "grunt check",
     "help": "grunt help",
     "serve": "grunt serve",
+    "prestart": "npm install grunt-cli",
     "start": "grunt serve",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "semantic-release-post": "semantic-release post",

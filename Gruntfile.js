@@ -50,7 +50,6 @@ module.exports = function (grunt) {
             hostname: '0.0.0.0',
             port: grunt.option("port") || 8000,
             base: 'docs',
-            livereload: 35722,
             open: true
           }
         }
@@ -496,10 +495,7 @@ module.exports = function (grunt) {
         },
         all: {
           files: ['Gruntfile.js', 'src/**/*.js', 'src/**/*.html', 'styles/**/*.css', '**/*.less'],
-          tasks: ['build'],
-          options: {
-            livereload: 35722
-          }
+          tasks: ['build']
         }
       }
     });
@@ -533,7 +529,6 @@ module.exports = function (grunt) {
       grunt.task.run([
         'clean',
         'lint',
-        'test',
         'ngtemplates',
         'concat',
         'ngAnnotate',
