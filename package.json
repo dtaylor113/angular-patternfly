@@ -98,7 +98,8 @@
     "check": "grunt check",
     "help": "grunt help",
     "serve": "grunt serve",
-    "start": "",
+    "prestart": "npm install -g grunt-cli",
+    "start": "grunt serve",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "semantic-release-post": "semantic-release post",
     "semantic-release-pre": "semantic-release pre"
