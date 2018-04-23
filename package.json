@@ -16,6 +16,7 @@
     "angular-sanitize": "1.5.*",
     "angular-svg-base-fix": "2.0.0",
     "angular-ui-bootstrap": "2.3.x",
+    "grunt-cli": "1.2.0",
     "lodash": "4.x",
     "patternfly": "^3.37.1"
   },
@@ -86,7 +87,7 @@
     }
   },
   "scripts": {
-    "install": "npm install -g grunt-cli; npm install",
+    "install": "npm install -g grunt-cli",
     "clean": "grunt clean",
     "build": "grunt build",
     "watch": "grunt watch",
