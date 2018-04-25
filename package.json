@@ -17,7 +17,8 @@
     "angular-svg-base-fix": "2.0.0",
     "angular-ui-bootstrap": "2.3.x",
     "lodash": "4.x",
-    "patternfly": "^3.37.1"
+    "patternfly": "^3.37.1",
+    "express": "3.4.4"
   },
   "devDependencies": {
     "angular-dragdrop": "1.0.13",
@@ -100,7 +101,8 @@
     "start": "grunt serve",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "semantic-release-post": "semantic-release post",
-    "semantic-release-pre": "semantic-release pre"
+    "semantic-release-pre": "semantic-release pre",
+    "openshift-serve": "node os-server"
   },
   "repository": {
     "type": "git",
