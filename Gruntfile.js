@@ -533,7 +533,7 @@ module.exports = function (grunt) {
       grunt.task.run([
         'clean',
         'lint',
-        'test',
+        //'test',
         'ngtemplates',
         'concat',
         'ngAnnotate',
